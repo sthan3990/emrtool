@@ -1,24 +1,22 @@
 // /src/resolvers/patientResolver.ts
-import { Firestore } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import { generateID } from '../utils/idgenerator.js';
-
-interface Context {
-  firestore: Firestore;
-}
 
 const patientResolvers = {
   Query: {
     getPatientByName: async (
       _: any,
       { patientName }: { patientName: string },
-      { firestore }: Context
     ) => {
       try {
-        const patientsRef = firestore.collection('patients');
+        const db = getFirestore();
+        const patientsRef = db.collection('patients');
         const querySnapshot = await patientsRef.where('name', '==', patientName).get();
 
         if (querySnapshot.empty) {
+
           throw new Error('Patient not found');
+
         } else {
           const patientsData = [];
           querySnapshot.forEach((doc) => {
@@ -34,11 +32,11 @@ const patientResolvers = {
     getPatientById: async (
       _: any,
       { patientId }: { patientId: string },
-      { firestore }: Context
     ) => {
       try {
+        const db = getFirestore();
 
-        const patientRef = firestore.collection('patients').doc(patientId);
+        const patientRef = db.collection('patients').doc(patientId);
         const patientDoc = await patientRef.get();
 
         if (!patientDoc.exists) {
@@ -55,12 +53,11 @@ const patientResolvers = {
       _: any,
       __: any,
       { dataSources }: any,
-      { firestore }: Context
     ) => {
       try {
-        const patientsRef = firestore.collection('patients');
+        const db = getFirestore();
+        const patientsRef = db.collection('patients');
         const querySnapshot = await patientsRef.get();
-
         const patientsData = [];
         querySnapshot.forEach((doc) => {
           patientsData.push(doc.data());
@@ -82,11 +79,11 @@ const patientResolvers = {
         gender: string;
         name: string;
       },
-      { firestore }: Context
     ) => {
       try {
+        const db = getFirestore();
         let patientId = generateID();
-        const patientRef = firestore.collection('patients').doc(patientId);
+        const patientRef = db.collection('patients').doc(patientId);
         await patientRef.set({
           patientId,
           birthday,
@@ -111,11 +108,10 @@ const patientResolvers = {
         gender: string;
         name: string;
       },
-      { firestore }: Context
     ) => {
       try {
-
-        const patientRef = firestore.collection('patients').doc(patientId);
+        const db = getFirestore();
+        const patientRef = db.collection('patients').doc(patientId);
         await patientRef.update({
           birthday,
           email,
@@ -131,10 +127,10 @@ const patientResolvers = {
     deletePatient: async (
       _: any,
       { patientId }: { patientId: string },
-      { firestore }: Context
     ) => {
       try {
-        const patientRef = firestore.collection('patients').doc(patientId);
+        const db = getFirestore();
+        const patientRef = db.collection('patients').doc(patientId);
         const patientDoc = await patientRef.get();
 
         if (!patientDoc.exists) {

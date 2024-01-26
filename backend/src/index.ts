@@ -9,7 +9,8 @@ import customSchema from './schema/index.js';
 import customResolvers from './resolver/index.js';
 import { initFireClient } from './config/fireclient.js';
 import { initFireAdmin } from './config/fireadmin.js';
-
+import usersRouter from './routes/user.js';
+import patientsRouter from './routes/patients.js';
 
 // Required logic for integrating with Express
 const app = express();
@@ -56,13 +57,17 @@ app.use(
 
   expressMiddleware(server, {
 
-    context: async ({ req }) => ({ 
+    context: async ({ req, res }) => ({ 
       firestore: firestore,
       token: req.headers.token 
     }),
   }),
-
 );
+
+// POST route for user registration
+app.use('/api/users', usersRouter);
+app.use('/api/patients', patientsRouter);
+
 // Modified server startup
 await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
 

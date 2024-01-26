@@ -1,6 +1,5 @@
 // /config/fireadmin.ts
 import admin from "firebase-admin";
-import { getFirestore } from "firebase-admin/firestore";
 import { createRequire } from "module";
 
 export const initFireAdmin = async () => {
