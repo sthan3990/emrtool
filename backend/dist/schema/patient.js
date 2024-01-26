@@ -1,4 +1,3 @@
- 
 export const patientSchema = `
   type Patient {
     id: ID!
