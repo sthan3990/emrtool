@@ -2,6 +2,7 @@
 
 import express from 'express';
 import { getUser, addUser, updateUser, deleteUser } from '../middleware/user.js'
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -21,7 +22,12 @@ router.get('/:id', async (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    const newUser = await addUser(username, password, role);
+
+    // encrypt the password
+    const saltRounds = 5;
+    const hashedPassword = bcrypt.hashSync(process.env.BCRYPT_HASH, saltRounds);
+
+    const newUser = await addUser(username, hashedPassword, role);
     res.json(newUser);
   } catch (error) {
     console.error('Error adding user:', error);
@@ -34,7 +40,12 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { username, password, role } = req.body;
-    const updatedUser = await updateUser(id, username, password, role);
+
+    // encrypt the password
+    const saltRounds = 5;
+    const hashedPassword = bcrypt.hashSync(process.env.BCRYPT_HASH, saltRounds);
+
+    const updatedUser = await updateUser(id, username, hashedPassword, role);
     res.json(updatedUser);
   } catch (error) {
     console.error('Error updating user:', error);
