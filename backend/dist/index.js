@@ -14,7 +14,7 @@ const app = express();
 // Use bodyParser middleware to parse JSON request bodies from the frontend
 app.use(express.json());
 initFireClient();
-initFireAdmin();
+const firestore = await initFireAdmin();
 // Enable CORS
 const corsOptions = {
     origin: '*',
@@ -38,7 +38,7 @@ const server = new ApolloServer({
 await server.start();
 app.use('/graphql', cors(), express.json(), expressMiddleware(server, {
     context: async ({ req }) => ({
-        dataSources: {},
+        firestore: firestore,
         token: req.headers.token
     }),
 }));

@@ -1,3 +1,4 @@
+// /config/fireadmin.ts
 import admin from "firebase-admin";
 import { createRequire } from "module";
 export const initFireAdmin = async () => {
@@ -12,6 +13,7 @@ export const initFireAdmin = async () => {
             databaseURL: process.env.FIREBASE_DATABASE_URL
         });
         console.log("Firebase Admin initialized successfully.");
+        return admin.firestore();
     }
     catch (error) {
         console.error("Error initializing Firebase Admin:", error);

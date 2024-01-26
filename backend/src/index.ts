@@ -9,14 +9,6 @@ import customSchema from './schema/index.js';
 import customResolvers from './resolver/index.js';
 import { initFireClient } from './config/fireclient.js';
 import { initFireAdmin } from './config/fireadmin.js';
-import { Firestore } from 'firebase-admin/firestore';
-
-// https://www.apollographql.com/docs/apollo-server/data/fetching-data/
-// Define MyContext to include the Firestore instance
-interface MyContext {
-  token?: String,
-  firestore: Firestore,
-}
 
 
 // Required logic for integrating with Express
@@ -26,8 +18,7 @@ const app = express();
 app.use(express.json());
 
 initFireClient();
-initFireAdmin();
-
+const firestore = await initFireAdmin();  
 
 // Enable CORS
 const corsOptions = {
@@ -66,9 +57,7 @@ app.use(
   expressMiddleware(server, {
 
     context: async ({ req }) => ({ 
-      dataSources: {
-        
-      },
+      firestore: firestore,
       token: req.headers.token 
     }),
   }),
