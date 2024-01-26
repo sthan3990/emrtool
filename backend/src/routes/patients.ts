@@ -1,9 +1,33 @@
 // routes/patients.js
 
 import express from 'express';
-import { addPatient, updatePatient, deletePatient } from '../middleware/patient';
+import { addPatient, getAllPatients, getPatientbyID, updatePatient, deletePatient } from '../middleware/patient.js';
 
 const patientsRouter = express.Router();
+
+// Route to view a specific patient
+patientsRouter.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const patient = await getPatientbyID(id);
+    res.json(patient);
+  } catch (error) {
+    console.error('Error fetching patient:', error);
+    res.status(500).json({ error: 'Error fetching patient' });
+  }
+});
+
+// Route to view all patients
+patientsRouter.get('/patients', async (req, res) => {
+  try{
+  const patients = await getAllPatients();
+
+  res.json(patients);
+  }catch (error) {
+    console.error('Error fetching all patients:', error);
+    res.status(500).json({ error: 'Error fetching all patients' });
+  }
+});
 
 // Route to add a new patient
 patientsRouter.post('/register', async (req, res) => {
