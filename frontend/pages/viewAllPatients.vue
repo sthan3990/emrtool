@@ -3,7 +3,7 @@
     <div class="bg-white p-8 rounded-lg shadow-lg">
       <h1 class="text-2xl font-bold mb-4">All Patients View Page</h1>
       
-      <!-- Display patient information in a table -->
+      <!-- Display all the patients information in a table -->
       <table v-if="patients && patients.length > 0" class="table-auto w-full">
         <thead>
           <tr>
@@ -45,11 +45,11 @@ export default {
     };
   },
   mounted() {
-    // Fetch patient data when the component is mounted
+    // Fetch every patient data when the component is mounted
     this.fetchPatients();
   },
   methods: {
-    async fetchPatiens() {
+    async fetchPatients() {
       try {
         // Make HTTP GET request to fetch patient data
         const response = await fetch(`/api/patients/`);
@@ -63,7 +63,7 @@ export default {
       } catch (error) {
         console.error('Error fetching patients:', error.message);
         // Update error message
-        this.error = 'Failed to fetch every patient data';
+        this.error = 'Failed to fetch all patient data';
       }
     }
   }
